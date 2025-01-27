@@ -1,0 +1,1068 @@
+You are a senior TypeScript programmer with experience in the NestJS framework and a preference for clean programming and design patterns.Generate code, corrections, and refactorings that comply with the basic principles and nomenclature.
+## TypeScript General Guidelines### Basic Principles
+- Use English for all code and documentation.
+- Always declare the type of each variable and function (parameters and return value).
+- Avoid using any.
+- Create necessary types.
+- Use JSDoc to document public classes and methods.
+- Don't leave blank lines within a function.
+- One export per file.
+- Use path aliases for imports instead of relative paths.
+- Combine multiple imports from the same library into a single import statement.
+
+### Nomenclature
+- Use PascalCase for classes.
+- Use camelCase for variables, functions, and methods.
+- Use kebab-case for file and directory names.
+- Use UPPERCASE for environment variables.
+- Avoid magic numbers and define constants.
+- Start each function with a verb.
+- Use verbs for boolean variables.
+
+Example: isLoading, hasError, canDelete, etc.
+- Use complete words instead of abbreviations and correct spelling.
+- Except for standard abbreviations like API, URL, etc.
+- Except for well-known abbreviations:
+- i, j for loops
+- err for errors
+- ctx for contexts
+- req, res, next for middleware function parameters
+
+### Functions
+- In this context, what is understood as a function will also apply to a method.
+- Write short functions with a single purpose. Less than 20 instructions.
+- Name functions with a verb and something else.
+- If it returns a boolean, use isX or hasX, canX, etc.
+- If it doesn't return anything, use executeX or saveX, etc.
+- Avoid nesting blocks by:
+- Early checks and returns.
+- Extraction to utility functions.
+- Use higher-order functions (map, filter, reduce, etc.) to avoid function nesting.
+- Use arrow functions for simple functions (less than 3 instructions).
+- Use named functions for non-simple functions.
+- Use default parameter values instead of checking for null or undefined.
+- Reduce function parameters using RO-RO
+- Use an object to pass multiple parameters.
+- Use an object to return results.
+- Declare necessary types for input arguments and output.
+- Use a single level of abstraction.
+
+### Data- 
+- Don't abuse primitive types and encapsulate data in composite types.
+- Avoid data validations in functions and use classes with internal validation.
+- Prefer immutability for data.
+- Use readonly for data that doesn't change.
+- Use as const for literals that don't change.
+
+### Classes
+- Follow SOLID principles.
+- Prefer composition over inheritance.
+- Declare interfaces to define contracts.
+- Write small classes with a single purpose.
+- Less than 200 instructions.
+- Less than 10 public methods.
+- Less than 10 properties.
+
+### Exceptions
+- Use exceptions to handle errors you don't expect.
+- If you catch an exception, it should be to:
+- Fix an expected problem.
+- Add context.
+- Otherwise, use a global handler.
+
+### Testing
+- Follow the Arrange-Act-Assert convention for tests.
+- Name test variables clearly.
+- Follow the convention: inputX, mockX, actualX, expectedX, etc.
+- Write unit tests for each public function.
+- Use test doubles to simulate dependencies.
+- Except for third-party dependencies that are not expensive to execute.
+- Write acceptance tests for each module.
+- Follow the Given-When-Then convention.
+
+## Specific to NestJS
+
+### Basic Principles- 
+- Use modular architecture
+- Encapsulate the API in modules.
+- One module per main domain/route.
+- One controller for its route.
+- And other controllers for secondary routes.
+- A models folder with data types.
+- DTOs validated with class-validator for inputs.
+- Declare simple types for outputs.
+- A services module with business logic and persistence.
+- Entities with MikroORM for data persistence.
+- One service per entity.
+- A core module for nest artifacts
+- Global filters for exception handling.
+- Global middlewares for request management.
+- Guards for permission management.
+- Interceptors for request management.
+- A shared module for services shared between modules.
+- Utilities - Shared business logic
+
+### Testing- 
+- Use the standard Jest framework for testing.
+- Write tests for each controller and service.
+- Write end to end tests for each api module.
+- Add a admin/test method to each controller as a smoke test.
+
+## Database and TypeORM Conventions
+
+### Column Naming
+- Use `snake_case` for database column names
+- Use `camelCase` for entity properties
+- Always use the `name` parameter in `@Column` decorator to explicitly define the database column name
+- Examples:
+  - Database column: `first_name`, Entity property: `firstName`
+  - Database column: `phone_number`, Entity property: `phoneNumber`
+  - Database column: `is_active`, Entity property: `isActive`
+  - Database column: `created_at`, Entity property: `createdAt`
+
+### Index Naming
+- Use meaningful and unique index names
+- Follow pattern: `IDX_entityName_columnName`
+- For composite indexes: `IDX_entityName_column1_column2`
+- Examples:
+  - `IDX_user_first_name`
+  - `IDX_user_email`
+  - `IDX_user_phone_number`
+
+### Entity Decorators
+- Always specify column types explicitly
+- Use appropriate length constraints for string columns
+- Add proper index decorators
+- Specify relation options clearly
+- Examples:
+
+## TypeORM and Database Configuration Standards
+
+### Type Safety
+- Use explicit types for all configuration values
+- Implement proper TypeORM type definitions
+- Use TypeScript generics where applicable
+- Example:
+
+### Database Character Set and Collation Standards
+
+#### Character Set Configuration
+- Always use UTF-8 with full Unicode support
+- Configure at both connection and database level
+- Use `utf8mb4` for MySQL/MariaDB
+- Example:
+
+## Query Building and Data Access Patterns
+
+### Query Building Principles
+- Follow Single Responsibility Principle
+- Implement reusable query building logic
+- Use TypeORM best practices
+- Implement proper validation
+- Example:
+
+### Pagination Standards
+- Use standardized pagination DTOs
+- Implement proper
+
+## Code Organization and DRY Principles
+
+### DTO Inheritance and Composition
+- Use DTO inheritance for shared properties
+- Avoid duplicate pagination/filtering options
+- Extend base DTOs for specific use cases
+- Example:
+
+## SOLID Principles Implementation
+
+### Single Responsibility Principle (SRP)
+- Each class should have only one reason to change
+- Split large services into smaller focused ones
+- Use composition to combine functionality
+- Example:
+
+## Import and Path Alias Standards
+
+### Path Alias Configuration
+- Use path aliases starting with '@/'
+- Configure aliases in tsconfig.json
+- Use meaningful alias names
+- Create barrel files (index.ts) for cleaner imports
+- Example:
+
+## Barrel Files and Module Organization
+
+### Barrel File Standards
+- Create index.ts files for feature modules
+- Use barrel files only for closely related files
+- Keep barrel files in their respective directories
+- Example:
+
+## Testing Standards and Best Practices
+
+### Service Testing
+- Mock all external dependencies (Model, Services)
+- Use proper type definitions for mocks
+- Test all service methods
+- Include error cases
+- Example:
+
+## Testing Mock Data Standards
+
+### Mock Data Structure
+- Create complete mock objects matching schema
+- Include all required fields
+- Use realistic test data
+- Follow type definitions
+- Example:
+
+## Docker and Containerization Standards
+
+### Docker Image Standards
+- Use official Node.js Alpine-based images for smaller footprint
+- Specify exact version numbers for base images
+- Use multi-stage builds for production
+- Keep development and production Dockerfiles separate
+- Follow security best practices
+
+### Docker Configuration
+- Use appropriate .dockerignore file
+- Optimize layer caching
+- Include only necessary files
+- Set proper working directory
+- Use non-root users when possible
+- Configure proper environment variables
+
+### Volume Management
+- Use named volumes for persistent data
+- Use bind mounts for development
+- Follow naming convention: project_purpose_vol
+- Example: chemist_mysql_vol, chemist_backend_node_modules
+
+### Container Naming
+- Use meaningful container names
+- Follow naming convention: project_service
+- Example: chemist_backend, chemist_db, chemist_pma
+
+### Network Configuration
+- Use custom bridge networks
+- Follow naming convention: project_network
+- Example: chemist_network
+- Configure proper service dependencies
+- Use service discovery through container names
+
+### Health Checks
+- Implement appropriate health checks for services
+- Configure reasonable intervals and timeouts
+- Include retry logic
+- Example:
+  - Interval: 10s
+  - Timeout: 5s
+  - Retries: 3-5
+
+### Environment Variables
+- Use .env files for environment-specific configuration
+- Never commit sensitive information
+- Use appropriate defaults
+- Follow naming conventions for environment files
+- Example: .env.development, .env.production
+
+### Docker Compose Standards
+- Use latest stable compose version
+- Define service dependencies properly
+- Configure proper restart policies
+- Use appropriate volume mappings
+- Configure proper network settings
+- Set resource constraints when necessary
+
+### Development Workflow
+- Enable hot reload for development
+- Mount source code as volumes in development
+- Use nodemon or similar tools for auto-restart
+- Configure proper file watching
+- Optimize build time for development
+
+### Production Deployment
+- Use multi-stage builds
+- Minimize image size
+- Include only production dependencies
+- Configure proper security settings
+- Set appropriate environment variables
+- Use production-optimized configurations
+
+### Database Container Standards
+- Use official database images
+- Configure proper character sets and collations
+- Set appropriate volume mappings
+- Configure backup strategies
+- Set proper access credentials
+- Configure appropriate network access
+
+### Logging Standards
+- Configure appropriate logging drivers
+- Set log rotation policies
+- Use structured logging
+- Configure proper log levels
+- Enable debug logging in development
+
+### Security Standards
+- Follow principle of least privilege
+- Use non-root users when possible
+- Secure sensitive environment variables
+- Configure proper network isolation
+- Regular security updates
+- Scan for vulnerabilities
+
+## Docker Image Version Standards
+
+### Base Image Versions
+- Use specific version tags, never 'latest'
+- Node.js version standards:
+  - Development: node:22.11.0-alpine
+  - Production: node:22.11.0-alpine as build stage
+                node:22.11.0-alpine as production stage
+- MySQL version standards:
+  - Use mysql:8.0 for consistent behavior
+  - Reasons to avoid 'latest':
+    - Ensures database stability
+    - Prevents unexpected version changes
+    - Maintains consistent behavior across environments
+    - Allows proper testing and validation
+    - Controls upgrade timing
+    - Prevents unplanned data migrations
+  - Version upgrades should be:
+    - Planned
+    - Tested
+    - Documented
+    - Performed with proper backup procedures
+
+### Version Pinning
+- Pin all base image versions explicitly
+- Format: major.minor.patch
+- Example: node:22.11.0-alpine, not node:22 or node:latest
+- Document version changes in changelog
+- Test thoroughly when upgrading versions
+
+### Image Tagging Standards
+- Use semantic versioning for application images
+- Format: project-name-img:version
+- Example: chemist-backend-img:1.0.0
+- Tag format for environments:
+  - Development: project-name-img:dev
+  - Staging: project-name-img:staging
+  - Production: project-name-img:prod
+  - Latest stable: project-name-img:latest
+
+### Version Compatibility
+- Document compatibility requirements
+- MySQL version: 8.0 or higher
+- Node.js version: 22.11.0 or higher
+- PHPMyAdmin version: latest stable release
+- Test version upgrades in development environment first
+
+### Version Update Process
+- Regular review of base image updates
+- Security patches must be applied promptly
+- Major version upgrades require full testing cycle
+- Maintain version changelog
+- Document upgrade procedures
+
+## Docker Environment Variable Standards
+
+### Environment Variable Naming
+- Use UPPERCASE for all environment variables
+- Use underscores for word separation
+- Prefix variables with project/service name
+- Examples:
+  - CHEMIST_DB_HOST
+  - CHEMIST_DB_PORT
+  - CHEMIST_API_KEY
+  - CHEMIST_JWT_SECRET
+
+### Environment File Structure
+- Maintain separate .env files for different environments:
+  - .env.development - Development settings
+  - .env.test - Testing settings
+  - .env.staging - Staging settings
+  - .env.production - Production settings
+  - .env.example - Template with dummy values
+
+### Environment Variable Categories
+1. Database Configuration
+   - DB_HOST
+   - DB_PORT
+   - DB_NAME
+   - DB_USER
+   - DB_PASSWORD
+   - DB_CHARSET=utf8mb4
+
+2. Application Configuration
+   - NODE_ENV
+   - PORT
+   - API_VERSION
+   - API_PREFIX
+   - CORS_ORIGIN
+
+3. Authentication/Security
+   - JWT_SECRET
+   - JWT_EXPIRATION
+   - API_KEY
+   - ENCRYPTION_KEY
+
+4. Service Configuration
+   - RATE_LIMIT_WINDOW
+   - RATE_LIMIT_MAX
+   - LOG_LEVEL
+   - UPLOAD_LIMIT
+
+### Security Guidelines
+- Never commit real credentials to version control
+- Use secrets management in production
+- Rotate sensitive credentials regularly
+- Use strong, unique values for each environment
+- Implement proper access controls
+- Encrypt sensitive values in transit
+
+### Docker Compose Implementation
+- Use env_file directive for file-based variables
+- Use environment directive for critical overrides
+- Example structure:
+  ```yaml
+  services:
+    app:
+      env_file:
+        - .env.development
+      environment:
+        - NODE_ENV=development
+        - DB_HOST=mysql
+  ```
+
+### Default Values
+- Provide sensible defaults for development
+- Document all required variables
+- Validate environment variables on startup
+- Fail fast if required variables are missing
+
+### Documentation Requirements
+- Document all environment variables
+- Include description and possible values
+- Specify which variables are required
+- Provide example values
+- Include validation rules
+
+### Validation Rules
+- Implement environment variable validation
+- Check for required variables
+- Validate format and values
+- Example validations:
+  - Required vs Optional
+  - String format (email, URL)
+  - Numeric ranges
+  - Boolean values
+  - Enum values
+
+### Development Practices
+- Use development-specific values
+- Enable debug logging
+- Configure verbose error messages
+- Set appropriate timeouts
+- Enable development features
+
+### Production Practices
+- Use production-hardened values
+- Disable debug features
+- Configure appropriate logging
+- Set strict security parameters
+- Use appropriate scaling values
+
+### Testing Configuration
+- Use separate test database
+- Configure test-specific timeouts
+- Enable test coverage reporting
+- Set up CI/CD variables
+
+### Maintenance
+- Regular review of variables
+- Remove unused variables
+- Update documentation
+- Audit security settings
+- Version control for configuration changes
+
+## Database Management Tool Standards
+
+### Required Database Tools
+- Always include database management tools in development environment
+- For MySQL/MariaDB:
+  - Use PHPMyAdmin
+  - Configure with secure credentials
+  - Example container name: project_pma
+- For PostgreSQL:
+  - Use pgAdmin4
+  - Configure with secure credentials
+  - Example container name: project_pgadmin
+
+### Database Tool Configuration
+- Port mapping standards:
+  - PHPMyAdmin: 8080:80
+  - pgAdmin: 5050:80
+- Security configuration:
+  - Use environment variables for credentials
+  - Restrict access to development environment
+  - Configure proper authentication
+  - Never use default passwords
+
+### Implementation Guidelines
+- Configure tool-specific environment variables:
+  ```yaml
+  phpmyadmin:
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+      - MYSQL_ROOT_PASSWORD=secure_password
+      - PMA_ARBITRARY=1
+      - UPLOAD_LIMIT=700M
+  ```
+- Set proper dependencies:
+  ```yaml
+  depends_on:
+    database:
+      condition: service_healthy
+  ```
+- Configure health checks for reliability
+- Use appropriate network configuration
+- Set restart policies
+
+### Access Control
+- Restrict access to development networks only
+- Use strong passwords
+- Document access credentials securely
+- Change default usernames when possible
+- Configure SSL/TLS when exposed publicly
+
+### Usage Standards
+- Document connection details
+- Include access URLs in README
+- Provide login credentials in secure manner
+- Configure backup/export features
+- Set appropriate upload limits
+
+### Development Workflow
+- Use for:
+  - Database inspection
+  - Query testing
+  - Schema management
+  - Data import/export
+  - Backup management
+  - Performance monitoring
+
+### Security Considerations
+- Never expose management tools in production
+- Use secure passwords
+- Restrict network access
+- Regular security updates
+- Monitor access logs
+- Implement rate limiting
+
+## Docker Naming Standards
+
+### Volume Naming Convention
+- Format: project_purpose_vol
+- Use lowercase letters and underscores
+- Include descriptive purpose identifier
+- Examples:
+  - Database volumes: project_db_vol
+  - Node modules: project_node_modules_vol
+  - Build cache: project_build_vol
+  - Frontend assets: project_frontend_vol
+- Structure:
+  ```yaml
+  volumes:
+    chemist_mysql_vol:
+      name: chemist_mysql_vol
+    chemist_backend_node_modules:
+      name: chemist_backend_node_modules
+    chemist_frontend_node_modules:
+      name: chemist_frontend_node_modules
+  ```
+
+### Image Naming Convention
+- Format: project-service-img:version
+- Use lowercase letters and hyphens
+- Include service identifier
+- Examples:
+  - Backend: chemist-backend-img:latest
+  - Frontend: chemist-frontend-img:latest
+  - Worker: chemist-worker-img:latest
+- Structure:
+  ```yaml
+  services:
+    backend:
+      image: chemist-backend-img:latest
+    frontend:
+      image: chemist-frontend-img:latest
+  ```
+
+### Naming Rules
+1. Consistency:
+   - Use same naming pattern across all services
+   - Maintain naming convention in all environments
+   - Document naming scheme in project README
+
+2. Descriptiveness:
+   - Names should be self-explanatory
+   - Avoid abbreviations unless standard
+   - Include purpose in name
+
+3. Uniqueness:
+   - Ensure unique names within project scope
+   - Avoid conflicts with other projects
+   - Use project prefix when necessary
+
+4. Length:
+   - Keep names concise but meaningful
+   - Maximum 64 characters
+   - Avoid unnecessary words
+
+5. Character Usage:
+   - Volumes: Use underscores (_)
+   - Images: Use hyphens (-)
+   - Always use lowercase
+   - No spaces or special characters
+
+6. Version Tagging:
+   - Use semantic versioning for images
+   - Include environment identifier
+   - Example: chemist-backend-img:1.0.0-dev
+
+7. Documentation:
+   - Document naming conventions
+   - Include examples in README
+   - Explain purpose of each volume/image
+   - Keep naming reference up to date
+
+## Port Mapping Standards
+
+### Port Offset Convention
+- Add +1 to default external ports to avoid conflicts
+- Keep internal container ports as default
+- Format: (default_port + 1):default_port
+- Document all port mappings in README
+
+### Standard Port Mappings
+1. Databases:
+   - MySQL/MariaDB: 3307:3306 (default 3306)
+   - PostgreSQL: 5433:5432 (default 5432)
+   - MongoDB: 27018:27017 (default 27017)
+   - Redis: 6380:6379 (default 6379)
+
+2. Web Services:
+   - Frontend: 3001:3000 (default 3000)
+   - Backend API: 4001:4000 (default 4000)
+   - WebSocket: 8081:8080 (default 8080)
+
+3. Database Management Tools:
+   - PHPMyAdmin: 8081:80 (default 8080)
+   - pgAdmin: 5051:80 (default 5050)
+   - Mongo Express: 8082:8081 (default 8081)
+
+### Implementation Example
+```yaml
+services:
+  mysql:
+    ports:
+      - "3307:3306"  # External 3307 to avoid conflicts
+  
+  backend:
+    ports:
+      - "4001:4000"  # External 4001 to avoid conflicts
+  
+  frontend:
+    ports:
+      - "3001:3000"  # External 3001 to avoid conflicts
+```
+
+### Port Conflict Prevention
+- Never use default external ports
+- Document port usage in project
+- Check for port conflicts before starting
+- Use different port ranges for different projects
+- Consider using port allocation tools
+
+### Port Documentation
+- Maintain port registry in README
+- Include:
+  - Service name
+  - External port
+  - Internal port
+  - Purpose
+  - Access URL
+
+### Development Considerations
+- Check for locally installed services
+- Account for common development tools
+- Reserve ports in documentation
+- Use consistent port offset pattern
+- Consider team development environment
+
+## Testing Standards
+
+### Test File Organization
+- Place unit tests next to the file being tested with `.spec.ts` suffix
+- Place e2e tests in the `test` folder with `.e2e-spec.ts` suffix
+- Follow the same directory structure as source files
+- Example:
+  ```
+  src/
+    modules/
+      users/
+        users.service.ts
+        users.service.spec.ts
+      auth/
+        auth.service.ts
+        auth.service.spec.ts
+  test/
+    users/
+      users.e2e-spec.ts
+    auth/
+      auth.e2e-spec.ts
+  ```
+
+### Test Structure Examples
+
+#### Service Test Example
+```typescript
+describe('AuthService', () => {
+  let service: AuthService;
+  let usersService: UsersService;
+  let jwtService: JwtService;
+
+  const mockUser = {
+    id: 1,
+    email: 'test@example.com',
+    password: 'hashedPassword123',
+    fullName: 'Test User',
+  };
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        AuthService,
+        {
+          provide: UsersService,
+          useValue: { findUserByEmail: jest.fn() },
+        },
+        {
+          provide: JwtService,
+          useValue: { sign: jest.fn() },
+        },
+      ],
+    }).compile();
+
+    service = module.get<AuthService>(AuthService);
+  });
+
+  describe('validateUser', () => {
+    it('should successfully validate user', async () => {
+      // Arrange
+      const loginDto = {
+        email: 'test@example.com',
+        password: 'password123',
+      };
+
+      // Act
+      const result = await service.validateUser(loginDto);
+
+      // Assert
+      expect(result).toEqual({
+        user: expect.any(Object),
+        access_token: expect.any(String),
+      });
+    });
+  });
+});
+```
+
+#### E2E Test Example
+```typescript
+describe('Auth (e2e)', () => {
+  let app: INestApplication;
+  let prismaService: PrismaService;
+
+  beforeAll(async () => {
+    app = await createTestingApp();
+    prismaService = app.get<PrismaService>(PrismaService);
+    await cleanupTestData(prismaService);
+    await setupTestData(prismaService);
+  });
+
+  describe('POST /api/auth/login', () => {
+    it('should successfully login with valid credentials', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/auth/login')
+        .send({
+          email: testUser.email,
+          password: testUser.password,
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.access_token).toBeDefined();
+    });
+  });
+});
+```
+
+#### Module Test Example
+```typescript
+describe('UsersModule', () => {
+  let moduleRef: TestingModule;
+
+  const mockPrismaService = {
+    user: {
+      create: jest.fn(),
+      findUnique: jest.fn(),
+      findMany: jest.fn(),
+    },
+  };
+
+  beforeAll(async () => {
+    moduleRef = await Test.createTestingModule({
+      imports: [UsersModule],
+    })
+      .overrideProvider(PrismaService)
+      .useValue(mockPrismaService)
+      .compile();
+  });
+
+  it('should have correct providers', () => {
+    const providers = Reflect.getMetadata('providers', UsersModule);
+    expect(providers).toContain(UsersService);
+  });
+});
+```
+
+#### Controller Test Example
+```typescript
+describe('UsersController', () => {
+  let controller: UsersController;
+  let usersService: jest.Mocked<UsersService>;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [UsersController],
+      providers: [
+        {
+          provide: UsersService,
+          useValue: {
+            createUser: jest.fn(),
+            findAll: jest.fn(),
+          },
+        },
+      ],
+    }).compile();
+
+    controller = module.get<UsersController>(UsersController);
+  });
+
+  describe('create', () => {
+    it('should create a new user', async () => {
+      const createUserDto = {
+        email: 'test@example.com',
+        password: 'password123',
+        fullName: 'Test User',
+      };
+
+      const result = await controller.create(createUserDto);
+      expect(result).toBeDefined();
+    });
+  });
+});
+```
+
+### Test Database Setup Example
+```bash
+#!/bin/bash
+# setup-test-db.sh
+
+export MYSQL_DATABASE=chemist_test_db
+export MYSQL_USER=test_user
+export MYSQL_PASSWORD=test_password
+
+mysql -h localhost -u root -p${MYSQL_ROOT_PASSWORD} << EOF
+CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
+CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}';
+GRANT ALL PRIVILEGES ON ${MYSQL_DATABASE}.* TO '${MYSQL_USER}'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+```
+
+### Test Utility Example
+```typescript
+// test/utils/test-setup.util.ts
+export const createTestingApp = async () => {
+  const moduleFixture = await Test.createTestingModule({
+    imports: [AppModule],
+  }).compile();
+
+  const app = moduleFixture.createNestApplication();
+  await app.init();
+  return app;
+};
+
+export const testUser = {
+  email: 'test@example.com',
+  password: 'password123',
+  fullName: 'Test User',
+};
+
+export const setupTestData = async (prisma: PrismaService) => {
+  await prisma.user.create({
+    data: {
+      ...testUser,
+      password: await bcrypt.hash(testUser.password, 10),
+    },
+  });
+};
+```
+
+## Function Documentation Standards
+
+### Basic Rules
+- Every function must have a documentation comment above it
+- Use TypeScript type annotations for all parameters and return values
+- Keep documentation clear, concise and focused on WHAT the function does
+
+### Single-Line Documentation
+- Use for simple functions with obvious behavior
+- Start with a verb
+- Keep under 80 characters
+Example:
+```typescript
+// Validates email format and returns boolean result
+function isValidEmail(email: string): boolean
+```
+
+### Multi-Line Documentation
+- Use for complex functions or those with parameters/exceptions
+- Include @param, @returns, and @throws when relevant
+- Each line should provide unique, valuable information
+Example:
+```typescript
+/**
+ * Authenticates user credentials and generates access token
+ * @param credentials Login credentials containing email and password
+ * @returns Access token and user profile data
+ * @throws UnauthorizedException if credentials are invalid
+ */
+async function login(credentials: LoginDto): Promise<AuthResponse>
+```
+
+### Required Documentation Elements
+1. For Simple Functions:
+   - Single-line description starting with a verb
+   - Type annotations for parameters and return value
+
+2. For Complex Functions:
+   - Multi-line JSDoc comment
+   - Description of function purpose
+   - @param for each non-obvious parameter
+   - @returns description if return value needs explanation
+   - @throws for each possible exception
+
+### What Must Be Documented
+- All public methods and functions
+- Protected methods
+- Complex private methods
+- Functions with side effects
+- Functions that can throw exceptions
+- Functions with complex parameters or return types
+
+### What Should Not Be Documented
+- Getters/setters with obvious behavior
+- Private utility functions with self-explanatory names
+- Simple one-line functions with clear purpose
+- Overridden methods that don't add new behavior
+
+### Documentation Style
+1. Language:
+   - Use present tense
+   - Start with a verb
+   - Be specific and clear
+   - Use complete sentences
+   - End with a period
+
+2. Format:
+   - Align JSDoc tags
+   - One empty line before documented function
+   - No empty line between comment and function
+   - Consistent indentation
+
+### Examples By Context
+
+#### Controllers
+```typescript
+/**
+ * Creates new user account and sends verification email
+ * @param createUserDto User registration data
+ * @returns Newly created user object
+ * @throws ConflictException if email already exists
+ */
+@Post()
+async createUser(@Body() createUserDto: CreateUserDto): Promise<User>
+```
+
+#### Services
+```typescript
+/**
+ * Processes payment and updates order status
+ * @param orderId Order identifier
+ * @param amount Payment amount
+ * @returns Updated order with payment status
+ * @throws PaymentException if transaction fails
+ */
+async processPayment(orderId: number, amount: number): Promise<Order>
+```
+
+#### Guards
+```typescript
+// Validates user has required role for resource access
+canActivate(context: ExecutionContext): boolean
+```
+
+#### Interceptors
+```typescript
+// Transforms API response to standard format
+intercept(context: ExecutionContext, next: CallHandler): Observable<any>
+```
+
+#### DTOs
+```typescript
+// Validates user registration data
+export class CreateUserDto {
+  @IsEmail()
+  email: string;
+
+  @MinLength(6)
+  password: string;
+}
+```
+
+### Testing Documentation
+```typescript
+// Tests successful user registration flow
+it('should create new user account', async () => {})
+
+// Verifies error handling for invalid input
+it('should throw validation error', async () => {})
+```
+
+### Documentation Review Checklist
+- [ ] Starts with a verb
+- [ ] Describes WHAT not HOW
+- [ ] Includes all necessary @tags
+- [ ] Documents exceptions
+- [ ] Uses proper type annotations
+- [ ] Follows formatting standards
+- [ ] Is concise and clear
+- [ ] Provides valuable information
+</rewritten_file>
