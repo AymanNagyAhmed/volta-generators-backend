@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { validationSchema } from '@/config/env.validation';
+import { UsersModule } from './modules/users/users.module';
+import { SettingsModule } from './modules/settings/settings.module';
 
 @Module({
   imports: [
@@ -11,6 +13,8 @@ import { validationSchema } from '@/config/env.validation';
       isGlobal: true,
       validationSchema
     }),
+    UsersModule,
+    SettingsModule,
 
   ],
   controllers: [AppController],
