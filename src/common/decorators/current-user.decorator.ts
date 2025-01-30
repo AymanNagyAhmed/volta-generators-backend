@@ -1,6 +1,5 @@
 // import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-// import { User } from '@/modules/users/schemas/user.schema';
-
+// import { User } from '@prisma/client';
 // export const getCurrentUserByContext = (context: ExecutionContext): User => {
 //   if (context.getType() === 'http') {
 //     const request = context.switchToHttp().getRequest();

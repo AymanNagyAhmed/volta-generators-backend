@@ -1,5 +1,5 @@
 import { HTTP_STATUS } from '@/common/constants/api.constants';
-// import { User } from '@/modules/users/schemas/user.schema';
+// import { User } from '@prisma/client';
 
 /**
  * Interface for successful API responses

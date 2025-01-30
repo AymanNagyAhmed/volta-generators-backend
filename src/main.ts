@@ -35,10 +35,6 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter());
 
-
-
-
-
   await app.listen(port);
   console.log(`🚀 HTTP server running on: http://localhost:${port}`);
   console.log(`📚 Swagger documentation: http://localhost:${port}/api/docs`);
