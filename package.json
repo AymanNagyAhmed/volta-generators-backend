@@ -16,7 +16,9 @@
     "test": "jest",
     "clean": "rimraf dist",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prebuild": "yarn clean"
+    "prebuild": "yarn clean",
+    "seed": "ts-node prisma/seeders/seed.ts",
+    "seed:dev": "ts-node prisma/seeders/seed.ts --dev"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.15",
