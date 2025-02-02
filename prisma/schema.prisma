@@ -13,7 +13,7 @@ enum UserRole {
 }
 
 model User {
-  id               String             @unique @default(cuid())
+  id               String             @id @default(cuid())
   role             UserRole           @default(user)
   email            String             @unique
   fullName         String?            @map("full_name") @db.VarChar(50)
@@ -24,4 +24,24 @@ model User {
   updatedAt        DateTime           @default(now()) @map("updated_at")
 
   @@map("users")
+}
+
+model SiteSection {
+  id          String    @unique @default(cuid())
+  title       String    @unique @map("title")
+  description String    @map("description")
+  settings    Setting[]
+
+  @@map("site_sections")
+}
+
+model Setting {
+  id          String         @unique @default(cuid())
+  sectionTitle   String         @map("section_title")
+  sectionId   String         @map("section_id")
+  section     SiteSection    @relation(fields: [sectionTitle], references: [title])
+  key         String
+  value       String
+
+  @@map("settings")
 }
