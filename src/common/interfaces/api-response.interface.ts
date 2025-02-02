@@ -1,5 +1,5 @@
 import { HTTP_STATUS } from '@/common/constants/api.constants';
-// import { User } from '@prisma/client';
+import { User } from '@prisma/client';
 
 /**
  * Interface for successful API responses
@@ -25,10 +25,10 @@ export interface ApiErrorResponse {
   errors?: Record<string, string[]>;
 }
 
-// export interface LoginResponse {
-//   user: User;
-//   access_token: string;
-// }
+export interface LoginResponse {
+  user: User;
+  access_token: string;
+}
 
 export interface TokenPayload {
   userId: string;

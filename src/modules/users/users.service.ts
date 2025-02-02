@@ -49,8 +49,11 @@ export class UsersService {
 
       return await this.prisma.user.create({
         data: {
-          ...createUserDto,
+          email: createUserDto.email,
           password: hashedPassword,
+          fullName: createUserDto.fullName,
+          dateOfBirth: createUserDto.dateOfBirth,
+          // role will default to 'user' as specified in schema
         },
       });
     } catch (error) {

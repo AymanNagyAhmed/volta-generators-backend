@@ -7,6 +7,8 @@ import { TransformResponseInterceptor } from '@/common/interceptors/transform-re
 import { API } from '@/common/constants/api.constants';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
+import * as cookieParser from 'cookie-parser';
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -33,6 +35,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
+
+  // Add cookie parser middleware
+  app.use(cookieParser());
   app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(port);
