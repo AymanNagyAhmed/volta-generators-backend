@@ -3,6 +3,8 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { CreateSiteSectionDto } from './dto/create-site-section.dto';
 import { UpdateSiteSectionDto } from './dto/update-site-section.dto';
 import { SiteSection } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { UniqueConstraintFailedException } from '@/common/exceptions/unique-constraint-failed.exception';
 
 @Injectable()
 export class SiteSectionsService {
@@ -12,11 +14,19 @@ export class SiteSectionsService {
    * Creates a new site section
    * @param createSiteSectionDto Site section creation data
    * @returns Newly created site section
+   * @throws UniqueConstraintFailedException if title already exists
    */
   async create(createSiteSectionDto: CreateSiteSectionDto): Promise<SiteSection> {
-    return this.prisma.siteSection.create({
-      data: createSiteSectionDto,
-    });
+    try {
+      return await this.prisma.siteSection.create({
+        data: createSiteSectionDto,
+      });
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new UniqueConstraintFailedException('title');
+      }
+      throw error;
+    }
   }
 
   /**
