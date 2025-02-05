@@ -6,6 +6,7 @@ import { validationSchema } from '@/config/env.validation';
 import { UsersModule } from './modules/users/users.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { SiteSectionsModule } from './modules/site-sections/site-sections.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from './modules/auth/auth.module';
     AuthModule,
     UsersModule,
     SettingsModule,
+    SiteSectionsModule,
 
   ],
   controllers: [AppController],
