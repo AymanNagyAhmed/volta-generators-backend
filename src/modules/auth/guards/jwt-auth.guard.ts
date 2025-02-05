@@ -91,7 +91,10 @@ export class JwtAuthGuard implements CanActivate {
  */
 @Injectable()
 export class LocalAuthGuard implements CanActivate {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -99,7 +102,7 @@ export class LocalAuthGuard implements CanActivate {
 
     const user = await this.usersService.validateUser(email, password);
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     request.user = user;

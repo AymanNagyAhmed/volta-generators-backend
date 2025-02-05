@@ -6,6 +6,10 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { ApiResponseUtil } from '@/common/utils/api-response.util';
 import { ApiResponse as IApiResponse } from '@/common/interfaces/api-response.interface';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { UserRole } from '@prisma/client';
 
 @ApiTags('Users')
 @Controller('users')
@@ -62,10 +66,20 @@ export class UsersController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all users' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.admin)
+  @ApiOperation({ summary: 'Get all users (Admin only)' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Users retrieved successfully'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'User does not have required role'
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User is not authenticated'
   })
   async findAll(): Promise<IApiResponse<User[]>> {
     try {

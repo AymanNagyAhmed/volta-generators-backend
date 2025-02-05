@@ -10,6 +10,7 @@ import { LoginDto } from '@/modules/auth/dto/login.dto';
 import { ApiResponse, LoginResponse } from '@/common/interfaces/api-response.interface';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { ApiResponseUtil } from '@/common/utils/api-response.util';
+import { Public } from '@/common/decorators/public.decorator';
 
 @ApiTags('2. Auth')
 @Controller('auth')
@@ -56,6 +57,7 @@ export class AuthController {
     );
   }
 
+  @Public()
   @Post('login')
   @ApiOperation({ summary: 'User login' })
   @ApiBody({ type: LoginDto })
