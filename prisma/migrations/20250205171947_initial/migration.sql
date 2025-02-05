@@ -7,6 +7,7 @@ CREATE TABLE "users" (
     "role" "UserRole" NOT NULL DEFAULT 'user',
     "email" TEXT NOT NULL,
     "full_name" VARCHAR(50),
+    "phone_number" VARCHAR(16),
     "date_of_birth" DATE,
     "password" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

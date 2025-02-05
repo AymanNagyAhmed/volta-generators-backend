@@ -76,17 +76,39 @@ export class UsersService {
     }
   }
 
-  async update(id: string, updateUserDto: Partial<User>): Promise<User> {
-    const user = await this.prisma.user.update({
-      where: { id },
-      data: updateUserDto,
-    });
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    try {
+      // Create update data object
+      const updateData: Prisma.UserUpdateInput = {
+        ...updateUserDto,
+        // Transform dateOfBirth if provided
+        ...(updateUserDto.dateOfBirth && {
+          dateOfBirth: new Date(updateUserDto.dateOfBirth)
+        }),
+        // Hash password if provided
+        ...(updateUserDto.password && {
+          password: await bcrypt.hash(updateUserDto.password, this.SALT_ROUNDS)
+        })
+      };
 
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      const user = await this.prisma.user.update({
+        where: { id },
+        data: updateData,
+      });
+
+      if (!user) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+
+      return user;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(`User with ID ${id} not found`);
+        }
+      }
+      throw error;
     }
-
-    return user;
   }
 
   async remove(id: string): Promise<void> {

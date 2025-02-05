@@ -10,6 +10,7 @@ import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { UserRole } from '@prisma/client';
+import { Public } from '@/common/decorators/public.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -17,6 +18,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @Public()
   @ApiOperation({ summary: 'Create new user' })
   @ApiResponse({ 
     status: HttpStatus.CREATED, 
@@ -100,7 +102,9 @@ export class UsersController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get user by id' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.admin)
+  @ApiOperation({ summary: 'Get user by id (Admin only)' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'User retrieved successfully'
@@ -108,6 +112,14 @@ export class UsersController {
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
     description: 'User not found'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'User does not have required role'
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User is not authenticated'
   })
   async findOne(@Param('id') id: string): Promise<IApiResponse<User>> {
     try {
@@ -135,7 +147,9 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Update user' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.admin)
+  @ApiOperation({ summary: 'Update user (Admin only)' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'User updated successfully'
@@ -147,6 +161,14 @@ export class UsersController {
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Invalid input data'
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'User does not have required role'
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User is not authenticated'
   })
   async update(
     @Param('id') id: string,
@@ -185,7 +207,9 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Delete user' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.admin)
+  @ApiOperation({ summary: 'Delete user (Admin only)' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'User deleted successfully'

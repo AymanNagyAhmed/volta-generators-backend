@@ -17,6 +17,7 @@ model User {
   role             UserRole           @default(user)
   email            String             @unique
   fullName         String?            @map("full_name") @db.VarChar(50)
+  phoneNumber      String?            @map("phone_number") @db.VarChar(16)
   dateOfBirth      DateTime?          @map("date_of_birth") @db.Date
   password         String
 

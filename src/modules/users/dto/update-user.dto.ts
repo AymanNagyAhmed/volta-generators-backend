@@ -1,22 +1,15 @@
-import { IsString, IsOptional, Matches, IsEmail } from 'class-validator';
+import { IsString, IsOptional, Matches, IsEmail, IsDateString, MinLength } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateUserDto {
   @ApiPropertyOptional({
-    description: 'User\'s first name',
-    example: 'John'
+    description: 'User\'s full name',
+    example: 'John Doe'
   })
   @IsOptional()
   @IsString()
-  readonly firstName?: string;
+  readonly fullName?: string;
 
-  @ApiPropertyOptional({
-    description: 'User\'s last name',
-    example: 'Doe'
-  })
-  @IsOptional()
-  @IsString()
-  readonly lastName?: string;
 
   @ApiPropertyOptional({
     description: 'User\'s email',
@@ -36,4 +29,23 @@ export class UpdateUserDto {
     message: 'Phone number must be a valid international format'
   })
   readonly phoneNumber?: string;
+
+  @ApiPropertyOptional({
+    description: 'User\'s date of birth',
+    example: '1990-01-01'
+  })
+  @IsOptional()
+  @IsDateString()
+  readonly dateOfBirth?: string;
+
+  @ApiPropertyOptional({
+    description: 'User\'s password - minimum 6 characters',
+    example: '123456789'
+  })
+  @IsOptional()
+  @IsString()
+  @MinLength(6, {
+    message: 'Password must be at least 6 characters long'
+  })
+  readonly password?: string;
 }
