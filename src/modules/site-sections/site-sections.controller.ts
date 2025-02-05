@@ -81,6 +81,7 @@ export class SiteSectionsController {
   @ApiOperation({ summary: 'Update a site section (Admin only)' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Site section updated successfully' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Site section not found' })
+  @ApiResponse({ status: HttpStatus.CONFLICT, description: 'Site section title already exists' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'User does not have required role' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User is not authenticated' })
   async update(

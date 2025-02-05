@@ -68,14 +68,22 @@ export class SiteSectionsService {
    * @param updateSiteSectionDto Update data
    * @returns Updated site section
    * @throws NotFoundException if site section not found
+   * @throws UniqueConstraintFailedException if new title already exists
    */
   async update(id: string, updateSiteSectionDto: UpdateSiteSectionDto): Promise<SiteSection> {
     await this.findOne(id);
 
-    return this.prisma.siteSection.update({
-      where: { id },
-      data: updateSiteSectionDto,
-    });
+    try {
+      return await this.prisma.siteSection.update({
+        where: { id },
+        data: updateSiteSectionDto,
+      });
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new UniqueConstraintFailedException('title');
+      }
+      throw error;
+    }
   }
 
   /**
