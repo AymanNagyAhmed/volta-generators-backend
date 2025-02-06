@@ -22,7 +22,10 @@ export const ERROR_MESSAGES = {
   RESOURCE_CONFLICT: (resource: string) => `${resource} already exists.`,
   INVALID_INPUT: 'The provided input is invalid.',
   UNAUTHORIZED: 'Unauthorized access.',
-  FORBIDDEN: 'Access forbidden.',
+  FORBIDDEN: {
+    ACCESS_DENIED: 'Access Denied: You don\'t have sufficient permissions to {action} this resource. Required role: {required}, Current role: {current}',
+    NOT_AUTHENTICATED: 'Access Denied: You must be logged in to access this resource',
+  },
   SERVICE_UNAVAILABLE: (service: string) => 
     `${service} is currently unavailable. Please try again later.`,
   UNEXPECTED_ERROR: 'An unexpected error occurred.',
