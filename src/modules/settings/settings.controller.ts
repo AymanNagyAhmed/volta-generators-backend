@@ -10,9 +10,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { SettingsService } from './settings.service';
-import { CreateSettingDto } from './dto/create-setting.dto';
-import { UpdateSettingDto } from './dto/update-setting.dto';
+import { SettingsService } from '@/modules/settings/settings.service';
+import { CreateSettingDto } from '@/modules/settings/dto/create-setting.dto';
+import { UpdateSettingDto } from '@/modules/settings/dto/update-setting.dto';
 import { Setting } from '@prisma/client';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
@@ -20,15 +20,16 @@ import { Roles } from '@/common/decorators/roles.decorator';
 import { UserRole } from '@prisma/client';
 import { ApiResponseUtil } from '@/common/utils/api-response.util';
 import { ApiResponse as IApiResponse } from '@/common/interfaces/api-response.interface';
+import { Public } from '@/common/decorators/public.decorator';
 
 @ApiTags('Settings')
 @Controller('settings')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(UserRole.admin)
 export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.admin)
   @ApiOperation({ summary: 'Create a new setting (Admin only)' })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Setting created successfully' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Site section not found' })
@@ -45,7 +46,8 @@ export class SettingsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all settings (Admin only)' })
+  @Public()
+  @ApiOperation({ summary: 'Get all settings' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Returns all settings' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'User does not have required role' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User is not authenticated' })
@@ -60,7 +62,8 @@ export class SettingsController {
   }
 
   @Get('section/:title')
-  @ApiOperation({ summary: 'Get settings by section title (Admin only)' })
+  @Public()
+  @ApiOperation({ summary: 'Get settings by section title' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Returns settings for the specified section' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'User does not have required role' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User is not authenticated' })
@@ -75,7 +78,8 @@ export class SettingsController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get a setting by id (Admin only)' })
+  @Public()
+  @ApiOperation({ summary: 'Get a setting by id' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Returns the setting' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Setting not found' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'User does not have required role' })
@@ -91,6 +95,8 @@ export class SettingsController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.admin)
   @ApiOperation({ summary: 'Update a setting (Admin only)' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Setting updated successfully' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Setting not found' })
@@ -110,6 +116,8 @@ export class SettingsController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.admin)
   @ApiOperation({ summary: 'Delete a setting (Admin only)' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Setting deleted successfully' })
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Setting not found' })
