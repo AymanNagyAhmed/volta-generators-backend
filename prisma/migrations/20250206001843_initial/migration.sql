@@ -44,5 +44,8 @@ CREATE UNIQUE INDEX "site_sections_title_key" ON "site_sections"("title");
 -- CreateIndex
 CREATE UNIQUE INDEX "settings_id_key" ON "settings"("id");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "settings_section_title_key_key" ON "settings"("section_title", "key");
+
 -- AddForeignKey
 ALTER TABLE "settings" ADD CONSTRAINT "settings_section_title_fkey" FOREIGN KEY ("section_title") REFERENCES "site_sections"("title") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -44,5 +44,6 @@ model Setting {
   key         String
   value       String
 
+  @@unique([sectionTitle, key])
   @@map("settings")
 }

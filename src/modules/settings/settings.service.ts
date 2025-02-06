@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '@/prisma/prisma.service';
 import { CreateSettingDto } from './dto/create-setting.dto';
 import { UpdateSettingDto } from './dto/update-setting.dto';
-import { Setting } from '@prisma/client';
+import { Setting, Prisma } from '@prisma/client';
 
 @Injectable()
 export class SettingsService {
@@ -12,23 +12,38 @@ export class SettingsService {
    * Creates a new setting
    * @param createSettingDto Setting creation data
    * @returns Newly created setting
+   * @throws ConflictException if setting with same key already exists in section
+   * @throws NotFoundException if section not found
    */
   async create(createSettingDto: CreateSettingDto): Promise<Setting> {
-    // First check if the section exists
-    const section = await this.prisma.siteSection.findUnique({
-      where: { title: createSettingDto.sectionTitle },
-    });
+    try {
+      // First check if the section exists
+      const section = await this.prisma.siteSection.findUnique({
+        where: { title: createSettingDto.sectionTitle },
+      });
 
-    if (!section) {
-      throw new NotFoundException(`Site section with title ${createSettingDto.sectionTitle} not found`);
+      if (!section) {
+        throw new NotFoundException(
+          `Site section with title ${createSettingDto.sectionTitle} not found`
+        );
+      }
+
+      return await this.prisma.setting.create({
+        data: {
+          ...createSettingDto,
+          sectionId: section.id,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          throw new ConflictException(
+            `Setting with key '${createSettingDto.key}' already exists in section '${createSettingDto.sectionTitle}'`
+          );
+        }
+      }
+      throw error;
     }
-
-    return this.prisma.setting.create({
-      data: {
-        ...createSettingDto,
-        sectionId: section.id,
-      },
-    });
   }
 
   /**
@@ -70,27 +85,39 @@ export class SettingsService {
    * @param updateSettingDto Update data
    * @returns Updated setting
    * @throws NotFoundException if setting not found
+   * @throws ConflictException if update would violate unique constraint
    */
   async update(id: string, updateSettingDto: UpdateSettingDto): Promise<Setting> {
-    await this.findOne(id);
+    try {
+      const existingSetting = await this.findOne(id);
 
-    // If sectionTitle is being updated, verify the new section exists
-    if (updateSettingDto.sectionTitle) {
-      const section = await this.prisma.siteSection.findUnique({
-        where: { title: updateSettingDto.sectionTitle },
-      });
+      // If sectionTitle is being updated, verify the new section exists
+      if (updateSettingDto.sectionTitle) {
+        const section = await this.prisma.siteSection.findUnique({
+          where: { title: updateSettingDto.sectionTitle },
+        });
 
-      if (!section) {
-        throw new NotFoundException(
-          `Site section with title ${updateSettingDto.sectionTitle} not found`
-        );
+        if (!section) {
+          throw new NotFoundException(
+            `Site section with title ${updateSettingDto.sectionTitle} not found`
+          );
+        }
       }
-    }
 
-    return this.prisma.setting.update({
-      where: { id },
-      data: updateSettingDto,
-    });
+      return await this.prisma.setting.update({
+        where: { id },
+        data: updateSettingDto,
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          throw new ConflictException(
+            `Setting with the same key already exists in this section`
+          );
+        }
+      }
+      throw error;
+    }
   }
 
   /**
