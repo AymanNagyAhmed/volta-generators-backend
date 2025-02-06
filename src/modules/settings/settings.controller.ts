@@ -22,7 +22,7 @@ import { ApiResponseUtil } from '@/common/utils/api-response.util';
 import { ApiResponse as IApiResponse } from '@/common/interfaces/api-response.interface';
 import { Public } from '@/common/decorators/public.decorator';
 
-@ApiTags('Settings')
+@ApiTags('3. Settings')
 @Controller('settings')
 export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}

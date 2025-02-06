@@ -12,7 +12,7 @@ import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
 import { ApiResponseUtil } from '@/common/utils/api-response.util';
 import { Public } from '@/common/decorators/public.decorator';
 
-@ApiTags('2. Auth')
+@ApiTags('1. Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

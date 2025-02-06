@@ -23,7 +23,7 @@ import { SiteSection } from '@prisma/client';
 import { UniqueConstraintFailedException } from '@/common/exceptions/unique-constraint-failed.exception';
 import { Public } from '@/common/decorators/public.decorator';
 
-@ApiTags('Site Sections')
+@ApiTags('2. Site Sections')
 @Controller('site-sections')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.admin)

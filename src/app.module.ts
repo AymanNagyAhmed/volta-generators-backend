@@ -16,9 +16,9 @@ import { SiteSectionsModule } from '@/modules/site-sections/site-sections.module
       validationSchema
     }),
     AuthModule,
-    UsersModule,
-    SettingsModule,
     SiteSectionsModule,
+    SettingsModule,
+    UsersModule,
 
   ],
   controllers: [AppController],

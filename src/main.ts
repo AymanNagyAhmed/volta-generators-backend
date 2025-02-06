@@ -27,6 +27,10 @@ async function bootstrap() {
     .setDescription('API documentation for Volta-generator system')
     .setVersion('1.0')
     .addBearerAuth()
+    .addTag('1. Auth', 'Authentication endpoints')
+    .addTag('2. Site Sections', 'Site sections management')
+    .addTag('3. Settings', 'Application settings')
+    .addTag('4. Users', 'User management')
     .build();
 
   const configService = app.get(ConfigService);
