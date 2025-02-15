@@ -8,8 +8,16 @@ import {
   Delete,
   HttpStatus,
   UseGuards,
+  UploadedFile,
+  UploadedFiles,
+  UseInterceptors,
+  ParseFilePipeBuilder,
+  Req,
+  BadRequestException,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileUploadHelper } from '@/common/helpers/file-upload.helper';
+import { ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { SettingsService } from '@/modules/settings/settings.service';
 import { CreateSettingDto } from '@/modules/settings/dto/create-setting.dto';
 import { UpdateSettingDto } from '@/modules/settings/dto/update-setting.dto';
@@ -21,11 +29,145 @@ import { UserRole } from '@prisma/client';
 import { ApiResponseUtil } from '@/common/utils/api-response.util';
 import { ApiResponse as IApiResponse } from '@/common/interfaces/api-response.interface';
 import { Public } from '@/common/decorators/public.decorator';
+import { imageFileFilter } from '@/common/filters/file.filter';
+import { diskStorage } from 'multer';
+import { v4 as uuidv4 } from 'uuid';
+import { extname } from 'path';
 
 @ApiTags('3. Settings')
 @Controller('settings')
 export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}
+
+  @Post('upload-single')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.admin)
+  @UseInterceptors(
+    FileInterceptor(
+      'file', 
+      {
+        ...FileUploadHelper.getStorageOptions('./public/uploads/settings'),
+        fileFilter: imageFileFilter,
+      }
+    )
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Upload single image file (Admin only)' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({ 
+    status: HttpStatus.OK, 
+    description: 'File uploaded successfully' 
+  })
+  @ApiResponse({ 
+    status: HttpStatus.BAD_REQUEST, 
+    description: 'Invalid file type or size' 
+  })
+  @ApiResponse({ 
+    status: HttpStatus.UNAUTHORIZED, 
+    description: 'User is not authenticated' 
+  })
+  @ApiResponse({ 
+    status: HttpStatus.FORBIDDEN, 
+    description: 'User does not have required role' 
+  })
+  async uploadSingle(
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<IApiResponse<any>> {
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
+    
+    const uploadedFile = await FileUploadHelper.uploadSingle(
+      file, 
+      'public/uploads/settings'
+    );
+
+    return ApiResponseUtil.success(
+      uploadedFile,
+      'File uploaded successfully',
+      '/settings/upload-single',
+      HttpStatus.OK
+    );
+  }
+
+  @Post('upload-multiple')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(UserRole.admin)
+  @UseInterceptors(
+    FilesInterceptor(
+      'files', 
+      20, 
+      {
+        ...FileUploadHelper.getStorageOptions('./public/uploads/settings'),
+        fileFilter: imageFileFilter,
+      }
+    )
+  )
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Upload multiple image files (Admin only)' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({ 
+    status: HttpStatus.OK, 
+    description: 'Files uploaded successfully' 
+  })
+  @ApiResponse({ 
+    status: HttpStatus.BAD_REQUEST, 
+    description: 'Invalid file type, size or no files provided' 
+  })
+  @ApiResponse({ 
+    status: HttpStatus.UNAUTHORIZED, 
+    description: 'User is not authenticated' 
+  })
+  @ApiResponse({ 
+    status: HttpStatus.FORBIDDEN, 
+    description: 'User does not have required role' 
+  })
+  async uploadMultiple(
+    @UploadedFiles() files: Express.Multer.File[],
+  ): Promise<IApiResponse<any>> {
+    if (!files || files.length === 0) {
+      throw new BadRequestException('At least one file is required');
+    }
+
+    if (files.length > 20) {
+      throw new BadRequestException('Maximum 20 files allowed');
+    }
+
+    const uploadedFiles = await FileUploadHelper.uploadMultiple(
+      files, 
+      'public/uploads/settings'
+    );
+
+    return ApiResponseUtil.success(
+      uploadedFiles,
+      'Files uploaded successfully',
+      '/settings/upload-multiple',
+      HttpStatus.OK
+    );
+  }
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)

@@ -7,6 +7,7 @@ import { UsersModule } from '@/modules/users/users.module';
 import { SettingsModule } from '@/modules/settings/settings.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { SiteSectionsModule } from '@/modules/site-sections/site-sections.module';
+import { MulterConfig } from '@/config/multer.config';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SiteSectionsModule } from '@/modules/site-sections/site-sections.module
       isGlobal: true,
       validationSchema
     }),
+    MulterConfig,
     AuthModule,
     SiteSectionsModule,
     SettingsModule,
