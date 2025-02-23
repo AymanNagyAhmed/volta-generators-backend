@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-
 import { ConfigService } from '@nestjs/config';
 import { GlobalExceptionFilter } from '@/common/filters/global-exception.filter';
 import { TransformResponseInterceptor } from '@/common/interceptors/transform-response.interceptor';
@@ -9,10 +8,11 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from '@/common/filters/http-exception.filter';
 import * as cookieParser from 'cookie-parser';
 import { createCorsConfig } from './config/cors.config';
-
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   
   const configService = app.get(ConfigService);
   
@@ -22,8 +22,19 @@ async function bootstrap() {
   // Use cookie parser
   app.use(cookieParser());
   
+  // Serve static files
+  app.useStaticAssets(join(__dirname, '..', 'public/uploads'), {
+    prefix: '/uploads',
+  });
+  
   // Set global prefix if you're using one
-  app.setGlobalPrefix(API.PREFIX);
+  app.setGlobalPrefix(API.PREFIX,{
+    exclude: ['/public/*']
+  });
+  app.useStaticAssets(join(process.cwd(), 'public'), {
+    prefix: '/public',
+    index: false
+  });
   
   // Global exception filter
   app.useGlobalFilters(new GlobalExceptionFilter());

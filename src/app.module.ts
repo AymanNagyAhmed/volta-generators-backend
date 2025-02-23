@@ -8,6 +8,8 @@ import { SettingsModule } from '@/modules/settings/settings.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { SiteSectionsModule } from '@/modules/site-sections/site-sections.module';
 import { MulterConfig } from '@/config/multer.config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -21,7 +23,13 @@ import { MulterConfig } from '@/config/multer.config';
     SiteSectionsModule,
     SettingsModule,
     UsersModule,
-
+    
+    // Add ServeStaticModule
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public/uploads'),
+      serveRoot: '/uploads',
+      exclude: ['/api*'],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
