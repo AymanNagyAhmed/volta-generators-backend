@@ -25,8 +25,7 @@ import { Public } from '@/common/decorators/public.decorator';
 
 @ApiTags('2. Site Sections')
 @Controller('site-sections')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(UserRole.admin)
+
 export class SiteSectionsController {
   constructor(private readonly siteSectionsService: SiteSectionsService) {}
 
@@ -51,7 +50,7 @@ export class SiteSectionsController {
 
   @Get()
   @Public()
-  @ApiOperation({ summary: 'Get all site sections (Admin only)' })
+  @ApiOperation({ summary: 'Get all site sections' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Returns all site sections' })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'User does not have required role' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User is not authenticated' })
