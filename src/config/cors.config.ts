@@ -6,13 +6,13 @@ export const createCorsConfig = (configService: ConfigService): CorsOptions => {
   let corsOrigin: CorsOptions['origin'];
 
   if (isDevEnvironment) {
-    corsOrigin = '*';
+    corsOrigin = true;
   } else {
     corsOrigin = (origin, callback) => {
       const allowedOrigins = configService
         .get<string>('CORS_ORIGINS', 'http://localhost:3000,http://localhost:3001')
         .split(',');
-        
+
       if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -26,7 +26,7 @@ export const createCorsConfig = (configService: ConfigService): CorsOptions => {
     methods: configService
       .get<string>('CORS_METHODS', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS')
       .split(','),
-    credentials: configService.get<boolean>('CORS_CREDENTIALS', true),
+    credentials: true,
     preflightContinue: false,
     optionsSuccessStatus: 204,
     allowedHeaders: [
@@ -36,8 +36,9 @@ export const createCorsConfig = (configService: ConfigService): CorsOptions => {
       'X-Requested-With',
       'Range',
       'Origin',
+      'Cookie',
     ],
-    exposedHeaders: ['Content-Range', 'X-Content-Range'],
+    exposedHeaders: ['Content-Range', 'X-Content-Range', 'Set-Cookie'],
     maxAge: 3600,
   };
 }; 
