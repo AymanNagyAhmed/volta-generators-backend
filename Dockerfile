@@ -1,17 +1,17 @@
 # Backend Dockerfile for Development
-FROM node:22.11.0-alpine
+FROM node:22.12.0-alpine
 
 # Add labels for image identification
-LABEL name="ekfc-users-ms"
+LABEL name="volta-backend"
 LABEL version="dev"
-LABEL description="users Microservice development image"
+LABEL description="Volta Backend development image"
 LABEL maintainer="AymanNagy.Ahmed@gmail.com"
 
+# Install yarn if not present
 RUN if ! yarn --version; then npm install -g yarn@1.22.22; fi
 
-
 # Set working directory
-WORKDIR /var/www/users-ms
+WORKDIR /app
 
 # Install system dependencies
 RUN apk add --no-cache \
@@ -27,24 +27,37 @@ RUN apk add --no-cache \
 # Create node user and set permissions
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# Install dependencies first
-COPY package*.json ./
-RUN yarn install --no-lockfile
+# Copy package files
+COPY package.json ./
+COPY yarn.lock ./
 
-# Copy the rest of the code
+# Clean yarn cache and install dependencies
+RUN yarn cache clean && \
+    yarn install
+
+# Copy prisma schema
+COPY prisma ./prisma/
+
+# Generate Prisma Client
+RUN yarn prisma generate
+
+# Copy rest of the application
 COPY . .
 
+# Build the application
+RUN yarn build
+
 # Set proper permissions
-RUN chown -R appuser:appgroup /var/www/users-ms
+RUN chown -R appuser:appgroup /app
 
 # Switch to non-root user
 USER appuser
 
 # Expose development port
-EXPOSE 4003 4005
+EXPOSE 4000
 
-# Set environment to development
-ENV NODE_ENV=development
+# Set environment to production
+ENV NODE_ENV=production
 
-# Development command with hot reload
-CMD ["yarn", "start:dev"]
+# production command
+CMD ["yarn", "start"]

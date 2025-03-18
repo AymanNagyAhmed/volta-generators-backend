@@ -63,8 +63,19 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   const port = configService.get<number>('PORT', 4000);
+  const databaseUrl = `${configService.get<string>('DB_TYPE')}://${
+    configService.get<string>('DB_USER')}:${
+    configService.get<string>('DB_PASSWORD')}@${
+    configService.get<string>('DB_HOST')}:${
+    configService.get<string>('DB_PORT')}/${
+    configService.get<string>('DB_NAME')}?authSource=${
+    configService.get<string>('DB_NAME')}`;
+  const databaseUrlFromEnv = configService.get<string>('DATABASE_URL');
   await app.listen(port);
-  console.log(`Application is running on: http://localhost:${port}`);
-  console.log(`📚 Swagger documentation: http://localhost:${port}/api/docs`);
+  console.log(`🗄️  Database URL: \n${databaseUrl}`);
+  console.log(`🗄️  Database URL from env: \n${databaseUrlFromEnv}`);
+  console.log(`🚀 Application is running on: \nhttp://localhost:${port}`);
+  console.log(`📚 Swagger documentation: \nhttp://localhost:${port}/api/docs`);
 }
 bootstrap();
+
