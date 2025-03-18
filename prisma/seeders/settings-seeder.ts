@@ -15,13 +15,6 @@ export async function settingsSeeder(prisma: PrismaClient): Promise<void> {
     }
     // Define settings with their corresponding section titles
     const settings: SettingSeed[] = [
-        // Background settings
-        {
-            sectionId: siteSectios.find(section => section.title === 'background')?.id,
-            sectionTitle: 'background',
-            key: 'background_image',
-            value: '/public/uploads/settings/background/background.jpg',
-        },
         // Navbar settings
         {
             sectionId: siteSectios.find(section => section.title === 'navbar')?.id,
@@ -34,12 +27,6 @@ export async function settingsSeeder(prisma: PrismaClient): Promise<void> {
             sectionTitle: 'navbar',
             key: 'nav_text',
             value: 'Volta Generators FZE',
-        },
-        {
-            sectionId: siteSectios.find(section => section.title === 'navbar')?.id,
-            sectionTitle: 'navbar',
-            key: 'menu_items',
-            value: JSON.stringify(['Home', 'About', 'Products', 'Contact']),
         },
         {
             sectionId: siteSectios.find(section => section.title === 'navbar')?.id,
@@ -145,16 +132,16 @@ export async function settingsSeeder(prisma: PrismaClient): Promise<void> {
             sectionTitle: 'our_projects',
             key: 'slides',
             value: JSON.stringify([
-                { description: 'Slide 1', image: '/public/uploads/settings/our_projects/project-1.webp' },
-                { description: 'Slide 2', image: '/public/uploads/settings/our_projects/project-2.webp' },
-                { description: 'Slide 3', image: '/public/uploads/settings/our_projects/project-3.webp' },
-                { description: 'Slide 4', image: '/public/uploads/settings/our_projects/project-4.webp' },
-                { description: 'Slide 5', image: '/public/uploads/settings/our_projects/project-5.webp' },
-                { description: 'Slide 6', image: '/public/uploads/settings/our_projects/project-6.webp' },
-                { description: 'Slide 7', image: '/public/uploads/settings/our_projects/project-7.webp' },
-                { description: 'Slide 8', image: '/public/uploads/settings/our_projects/project-8.webp' },
-                { description: 'Slide 9', image: '/public/uploads/settings/our_projects/project-9.webp' },
-                { description: 'Slide 10', image: '/public/uploads/settings/our_projects/project-10.webp' },
+                { description: 'Slide 1', image: '/public/uploads/settings/our_projects/project-1.png' },
+                { description: 'Slide 2', image: '/public/uploads/settings/our_projects/project-1.png' },
+                { description: 'Slide 3', image: '/public/uploads/settings/our_projects/project-1.png' },
+                { description: 'Slide 4', image: '/public/uploads/settings/our_projects/project-1.png' },
+                { description: 'Slide 5', image: '/public/uploads/settings/our_projects/project-1.png' },
+                { description: 'Slide 6', image: '/public/uploads/settings/our_projects/project-1.png' },
+                { description: 'Slide 7', image: '/public/uploads/settings/our_projects/project-1.png' },
+                { description: 'Slide 8', image: '/public/uploads/settings/our_projects/project-1.png' },
+                { description: 'Slide 9', image: '/public/uploads/settings/our_projects/project-1.png' },
+                { description: 'Slide 10', image: '/public/uploads/settings/our_projects/project-1.png' },
             ]),
         },
 
